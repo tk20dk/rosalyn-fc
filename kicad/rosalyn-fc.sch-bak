@@ -1129,7 +1129,7 @@ F 1 "Green" H 3993 1576 50  0000 C CNN
 F 2 "LED_SMD:LED_0603_1608Metric" H 4000 1450 50  0001 C CNN
 F 3 "~" H 4000 1450 50  0001 C CNN
 	1    4000 1450
-	0    1    1    0   
+	0    -1   -1   0   
 $EndComp
 $Comp
 L power:+3.3V #PWR034
