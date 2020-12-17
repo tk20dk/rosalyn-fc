@@ -29,6 +29,21 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "stm32f7xx_ll_adc.h"
+#include "stm32f7xx.h"
+#include "stm32f7xx_ll_i2c.h"
+#include "stm32f7xx_ll_rcc.h"
+#include "stm32f7xx_ll_bus.h"
+#include "stm32f7xx_ll_system.h"
+#include "stm32f7xx_ll_exti.h"
+#include "stm32f7xx_ll_cortex.h"
+#include "stm32f7xx_ll_utils.h"
+#include "stm32f7xx_ll_pwr.h"
+#include "stm32f7xx_ll_dma.h"
+#include "stm32f7xx_ll_spi.h"
+#include "stm32f7xx_ll_tim.h"
+#include "stm32f7xx_ll_usart.h"
+#include "stm32f7xx_ll_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -50,8 +65,6 @@ extern "C" {
 
 /* USER CODE END EM */
 
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
-
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -60,43 +73,43 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define BEEPER_Pin GPIO_PIN_13
+#define BEEPER_Pin LL_GPIO_PIN_13
 #define BEEPER_GPIO_Port GPIOC
-#define BARO_NSS_Pin GPIO_PIN_15
+#define BARO_NSS_Pin LL_GPIO_PIN_15
 #define BARO_NSS_GPIO_Port GPIOC
-#define VBAT_ADC_Pin GPIO_PIN_1
+#define VBAT_ADC_Pin LL_GPIO_PIN_1
 #define VBAT_ADC_GPIO_Port GPIOC
-#define CURRENT_ADC_Pin GPIO_PIN_2
+#define CURRENT_ADC_Pin LL_GPIO_PIN_2
 #define CURRENT_ADC_GPIO_Port GPIOC
-#define RSSI_ADC_Pin GPIO_PIN_3
+#define RSSI_ADC_Pin LL_GPIO_PIN_3
 #define RSSI_ADC_GPIO_Port GPIOC
-#define GYRO1_NSS_Pin GPIO_PIN_4
+#define GYRO1_NSS_Pin LL_GPIO_PIN_4
 #define GYRO1_NSS_GPIO_Port GPIOA
-#define GYRO1_EXTI_Pin GPIO_PIN_4
+#define GYRO1_EXTI_Pin LL_GPIO_PIN_4
 #define GYRO1_EXTI_GPIO_Port GPIOC
-#define M3_Pin GPIO_PIN_0
+#define M3_Pin LL_GPIO_PIN_0
 #define M3_GPIO_Port GPIOB
-#define M4_Pin GPIO_PIN_1
+#define M4_Pin LL_GPIO_PIN_1
 #define M4_GPIO_Port GPIOB
-#define LED0_Pin GPIO_PIN_2
+#define LED0_Pin LL_GPIO_PIN_2
 #define LED0_GPIO_Port GPIOB
-#define SPI2_NSS_Pin GPIO_PIN_12
+#define SPI2_NSS_Pin LL_GPIO_PIN_12
 #define SPI2_NSS_GPIO_Port GPIOB
-#define M2_Pin GPIO_PIN_7
+#define M2_Pin LL_GPIO_PIN_7
 #define M2_GPIO_Port GPIOC
-#define FLASH_CS_Pin GPIO_PIN_8
+#define FLASH_CS_Pin LL_GPIO_PIN_8
 #define FLASH_CS_GPIO_Port GPIOC
-#define M1_Pin GPIO_PIN_9
+#define M1_Pin LL_GPIO_PIN_9
 #define M1_GPIO_Port GPIOC
-#define LED_Pin GPIO_PIN_8
+#define LED_Pin LL_GPIO_PIN_8
 #define LED_GPIO_Port GPIOA
-#define PPM_Pin GPIO_PIN_15
+#define PPM_Pin LL_GPIO_PIN_15
 #define PPM_GPIO_Port GPIOA
-#define M5_Pin GPIO_PIN_6
+#define M5_Pin LL_GPIO_PIN_6
 #define M5_GPIO_Port GPIOB
-#define M6_Pin GPIO_PIN_8
+#define M6_Pin LL_GPIO_PIN_8
 #define M6_GPIO_Port GPIOB
-#define CAMERA_CONTROL_Pin GPIO_PIN_9
+#define CAMERA_CONTROL_Pin LL_GPIO_PIN_9
 #define CAMERA_CONTROL_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
