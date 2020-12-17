@@ -35,6 +35,9 @@ class TMpu6000
   static constexpr uint8_t GYRO_ZOUT_H  = 0x47;
   static constexpr uint8_t GYRO_ZOUT_L  = 0x48;
 
+  static constexpr uint8_t PWR_MGMT_1   = 0x6b;
+  static constexpr uint8_t PWR_MGMT_2   = 0x6c;
+
   static constexpr uint8_t WHO_AM_I     = 0x75;
 
 public:

@@ -10,6 +10,12 @@ TMpu6000::TMpu6000( TSpi &Spi, GPIO_TypeDef *const PortNSS, uint32_t const PinNS
 
 bool TMpu6000::Setup()
 {
+  // Reset MPU6000 chip
+  WriteU8( PWR_MGMT_1, 0b10000000 );
+  while( ReadU8( PWR_MGMT_1 ) != 0b01000000 )
+  {
+  }
+
   if( ReadU8( WHO_AM_I ) != 0x68 )
   {
     return false;
@@ -19,6 +25,9 @@ bool TMpu6000::Setup()
   WriteU8( CONFIG, 6 );
   WriteU8( GYRO_CONFIG, 0b11100000 );
   WriteU8( ACCEL_CONFIG, 0b00000000 );
+
+  // Exit sleep mode
+  WriteU8( PWR_MGMT_1, 0b00000001 );
 
   auto const AccelX = ReadS16( ACCEL_XOUT );
   auto const AccelY = ReadS16( ACCEL_YOUT );
