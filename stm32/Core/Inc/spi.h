@@ -16,6 +16,7 @@ public:
   }
 
   void Read( void* const RxData, uint32_t const Length ) const;
+  void ReadSwap16( void* const RxData, uint32_t const Length ) const;
   void Write( void const* const TxData, uint32_t const Length ) const;
   void WriteRead( void const* const TxData, void* const RxData, uint32_t const Length ) const;
 

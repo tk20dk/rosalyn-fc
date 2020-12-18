@@ -1,4 +1,4 @@
-#include "mpu6000.h"
+ #include "mpu6000.h"
 
 
 TMpu6000::TMpu6000( TSpi &Spi, GPIO_TypeDef *const PortNSS, uint32_t const PinNSS ) :
@@ -10,112 +10,61 @@ TMpu6000::TMpu6000( TSpi &Spi, GPIO_TypeDef *const PortNSS, uint32_t const PinNS
 
 bool TMpu6000::Setup()
 {
-  // Reset MPU6000 chip
-  WriteU8( PWR_MGMT_1, 0b10000000 );
-  while( ReadU8( PWR_MGMT_1 ) != 0b01000000 )
-  {
-  }
+  // Reset device
+  Write( PWR_MGMT_1, 0b10000000 );
+  LL_mDelay( 100 );
+  Write( SIGNAL_PATH_RESET, 0b00000111 );
+  LL_mDelay( 100 );
 
-  if( ReadU8( WHO_AM_I ) != 0x68 )
+  // Disable I2C interface
+  Write( USER_CTRL, 0b00010000 );
+
+  if( Read( WHO_AM_I ) != 0x68 )
   {
     return false;
   }
 
-  WriteU8( SMPRT_DIV, 10 );
-  WriteU8( CONFIG, 6 );
-  WriteU8( GYRO_CONFIG, 0b11100000 );
-  WriteU8( ACCEL_CONFIG, 0b00000000 );
+  Write( SMPRT_DIV, 0 );
+  Write( CONFIG, 0 );
+  Write( GYRO_CONFIG, 0b00011000 );  // ± 2000 °/s
+  Write( ACCEL_CONFIG, 0b00011000 ); // ± 16g
 
   // Exit sleep mode
-  WriteU8( PWR_MGMT_1, 0b00000001 );
-
-  auto const AccelX = ReadS16( ACCEL_XOUT );
-  auto const AccelY = ReadS16( ACCEL_YOUT );
-  auto const AccelZ = ReadS16( ACCEL_ZOUT );
-  auto const Temp   = ReadS16( TEMP_OUT );
-  auto const GyroX  = ReadS16( GYRO_XOUT );
-  auto const GyroY  = ReadS16( GYRO_YOUT );
-  auto const GyroZ  = ReadS16( GYRO_ZOUT );
-
-  if( AccelX == 0 )
-  {
-    return false;
-  }
-
-  if( AccelY == 0 )
-  {
-    return false;
-  }
-
-  if( AccelZ == 0 )
-  {
-    return false;
-  }
-
-  if( Temp == 0 )
-  {
-    return false;
-  }
-
-  if( GyroX == 0 )
-  {
-    return false;
-  }
-
-  if( GyroY == 0 )
-  {
-    return false;
-  }
-
-  if( GyroZ == 0 )
-  {
-    return false;
-  }
+  Write( PWR_MGMT_1, 0b00000000 );
 
   return true;
 }
 
-uint8_t TMpu6000::ReadU8( uint8_t const Command )
+TMpu6000::TMpuData TMpu6000::GetData()
 {
-  LL_GPIO_ResetOutputPin( PortNSS, PinNSS );
+  TScopedLow ScopedLow( PortNSS, PinNSS );
 
-  Spi.Write( Command | 0x80 );
-  auto const Data = Spi.Read();
+  TMpuData MpuData;
+  Spi.Write( ACCEL_XOUT | CMD_READ );
+  Spi.ReadSwap16( &MpuData, sizeof( MpuData ));
 
-  LL_GPIO_SetOutputPin( PortNSS, PinNSS );
-  return Data;
+  MpuData.Temp = ( MpuData.Temp / 340 ) + 36;
+
+  return MpuData;
 }
 
-uint16_t TMpu6000::ReadU16( uint8_t const Command )
+bool TMpu6000::Selftest()
 {
-  LL_GPIO_ResetOutputPin( PortNSS, PinNSS );
-
-  Spi.Write( Command | 0x80 );
-  auto const DataH = Spi.Read();
-  auto const DataL = Spi.Read();
-
-  LL_GPIO_SetOutputPin( PortNSS, PinNSS );
-
-  return DataH * 256 + DataL;
+  return true;
 }
 
-void TMpu6000::WriteU8( uint8_t const Command, uint8_t const Data )
+uint8_t TMpu6000::Read( uint8_t const Command ) const
 {
-  LL_GPIO_ResetOutputPin( PortNSS, PinNSS );
+  TScopedLow ScopedLow( PortNSS, PinNSS );
 
-  Spi.Write( Command & ~0x80 );
+  Spi.Write( Command | CMD_READ );
+  return Spi.Read();
+}
+
+void TMpu6000::Write( uint8_t const Command, uint8_t const Data ) const
+{
+  TScopedLow ScopedLow( PortNSS, PinNSS );
+
+  Spi.Write( Command & CMD_WRITE );
   Spi.Write( Data );
-
-  LL_GPIO_SetOutputPin( PortNSS, PinNSS );
-}
-
-void TMpu6000::WriteU16( uint8_t const Command, uint16_t const Data )
-{
-  LL_GPIO_ResetOutputPin( PortNSS, PinNSS );
-
-  Spi.Write( Command & ~0x80 );
-  Spi.Write( Data >> 8 );
-  Spi.Write( Data );
-
-  LL_GPIO_SetOutputPin( PortNSS, PinNSS );
 }

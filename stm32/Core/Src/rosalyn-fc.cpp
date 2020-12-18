@@ -1,7 +1,7 @@
 #include "rosalyn-fc.h"
 
 
-TRosalynFc RosalynFc;
+static TRosalynFc RosalynFc;
 
 void TRosalynFc::Loop()
 {
@@ -9,6 +9,16 @@ void TRosalynFc::Loop()
   HAL_Delay( 100 );
   LL_GPIO_SetOutputPin( LED0_GPIO_Port, LED0_Pin );
   HAL_Delay( 900 );
+
+  auto const Data = Mpu6000.GetData();
+  UsbPrintf( "%6d %6d %6d %6d %6d %6d %6d\n",
+    Data.Temp,
+    Data.GyroX,
+    Data.GyroY,
+    Data.GyroZ,
+    Data.AccelX,
+    Data.AccelY,
+    Data.AccelZ );
 }
 
 void TRosalynFc::Setup()
@@ -17,7 +27,6 @@ void TRosalynFc::Setup()
 
   if( Mpu6000.Setup() )
   {
-    LL_GPIO_ResetOutputPin( LED0_GPIO_Port, LED0_Pin );
   }
 }
 

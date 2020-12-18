@@ -6,6 +6,9 @@
 
 class TMpu6000
 {
+  static constexpr uint8_t CMD_READ     = 0x80;
+  static constexpr uint8_t CMD_WRITE    = 0x7f;
+
   static constexpr uint8_t SMPRT_DIV    = 0x19;
   static constexpr uint8_t CONFIG       = 0x1a;
   static constexpr uint8_t GYRO_CONFIG  = 0x1b;
@@ -35,35 +38,56 @@ class TMpu6000
   static constexpr uint8_t GYRO_ZOUT_H  = 0x47;
   static constexpr uint8_t GYRO_ZOUT_L  = 0x48;
 
+  static constexpr uint8_t SIGNAL_PATH_RESET = 0x68;
+  static constexpr uint8_t USER_CTRL    = 0x6a;
   static constexpr uint8_t PWR_MGMT_1   = 0x6b;
   static constexpr uint8_t PWR_MGMT_2   = 0x6c;
 
   static constexpr uint8_t WHO_AM_I     = 0x75;
 
+  struct TScopedLow
+  {
+    TScopedLow( GPIO_TypeDef *const PortNSS, uint32_t const PinNSS ) :
+      PinNSS( PinNSS ),
+      PortNSS( PortNSS )
+    {
+      LL_GPIO_ResetOutputPin( PortNSS, PinNSS );
+    }
+    ~TScopedLow()
+    {
+      LL_GPIO_SetOutputPin( PortNSS, PinNSS );
+    }
+  private:
+    uint32_t const PinNSS;
+    GPIO_TypeDef *const PortNSS;
+  };
+
+  struct TMpuData
+  {
+    int16_t AccelX;
+    int16_t AccelY;
+    int16_t AccelZ;
+    int16_t Temp;
+    int16_t GyroX;
+    int16_t GyroY;
+    int16_t GyroZ;
+  };
+
 public:
   TMpu6000( TSpi &Spi, GPIO_TypeDef *const PortNSS, uint32_t const PinNSS );
 
   bool Setup();
-  uint8_t ReadU8( uint8_t const Command );
-  uint16_t ReadU16( uint8_t const Command );
-  void WriteU8( uint8_t const Command, uint8_t const Data );
-  void WriteU16( uint8_t const Command, uint16_t const Data );
+  bool Selftest();
+  TMpuData GetData();
 
-  int8_t ReadS8( uint8_t const Command )
-  {
-    return static_cast< int8_t >( ReadU8( Command ));
-  }
-
-  int16_t ReadS16( uint8_t const Command )
-  {
-    return static_cast< int16_t >( ReadU16( Command ));
-  }
+private:
+  uint8_t Read( uint8_t const Command ) const;
+  void Write( uint8_t const Command, uint8_t const Data ) const;
 
 private:
   TSpi &Spi;
   uint32_t const PinNSS;
   GPIO_TypeDef *const PortNSS;
 };
-
 
 #endif // MPU6000_H__

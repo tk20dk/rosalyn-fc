@@ -38,6 +38,20 @@ void TSpi::Read( void* const RxData, uint32_t const Length ) const
   while( RxPtr < RxEnd );
 }
 
+void TSpi::ReadSwap16( void* const RxData, uint32_t const Length ) const
+{
+  auto RxPtr = reinterpret_cast< uint8_t*>( RxData );
+  auto const RxEnd = &RxPtr[ Length ];
+
+  do
+  {
+    RxPtr[ 1 ] = Read();
+    RxPtr[ 0 ] = Read();
+    RxPtr += 2;
+  }
+  while( RxPtr < RxEnd );
+}
+
 void TSpi::WriteRead( void const* const TxData, void* const RxData, uint32_t const Length ) const
 {
   auto RxPtr = reinterpret_cast< uint8_t*>( RxData );
