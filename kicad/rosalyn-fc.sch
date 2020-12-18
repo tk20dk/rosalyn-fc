@@ -432,7 +432,7 @@ F 3 "" H 4150 3550 50  0001 C CNN
 $EndComp
 Text GLabel 4700 4500 0    50   BiDi ~ 0
 uart6_rxtx
-Text GLabel 9350 2050 2    50   Input ~ 0
+Text GLabel 9350 2050 2    50   Output ~ 0
 gyro1_exti
 Text GLabel 7950 2350 0    50   Input ~ 0
 gyro1_cs
@@ -1619,7 +1619,7 @@ L Device:D_Schottky D2
 U 1 1 5FC37EB1
 P 4650 6700
 F 0 "D2" H 4650 6483 50  0000 C CNN
-F 1 "D_Schottky" H 4650 6574 50  0000 C CNN
+F 1 "1N5819" H 4650 6574 50  0000 C CNN
 F 2 "Diode_SMD:D_0603_1608Metric" H 4650 6700 50  0001 C CNN
 F 3 "~" H 4650 6700 50  0001 C CNN
 	1    4650 6700
