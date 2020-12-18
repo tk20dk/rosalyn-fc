@@ -2,6 +2,7 @@
 #define MPU6000_H__
 
 #include "spi.h"
+#include "system.h"
 
 
 class TMpu6000
@@ -44,23 +45,6 @@ class TMpu6000
   static constexpr uint8_t PWR_MGMT_2   = 0x6c;
 
   static constexpr uint8_t WHO_AM_I     = 0x75;
-
-  struct TScopedLow
-  {
-    TScopedLow( GPIO_TypeDef *const PortNSS, uint32_t const PinNSS ) :
-      PinNSS( PinNSS ),
-      PortNSS( PortNSS )
-    {
-      LL_GPIO_ResetOutputPin( PortNSS, PinNSS );
-    }
-    ~TScopedLow()
-    {
-      LL_GPIO_SetOutputPin( PortNSS, PinNSS );
-    }
-  private:
-    uint32_t const PinNSS;
-    GPIO_TypeDef *const PortNSS;
-  };
 
   struct TMpuData
   {
