@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP AT7456E
+D Single-Channel Monochrome On-Screen
+Display with Integrated EEPROM
+F https://datasheets.maximintegrated.com/en/ds/MAX7456.pdf
+$ENDCMP
+#
+#End Doc Library

@@ -3,10 +3,10 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 1
+Sheet 1 2
 Title "RosalynFC"
-Date "2020-11-23"
-Rev "v0.1"
+Date "2021-01-03"
+Rev "v0.2"
 Comp "www.2-0.dk"
 Comment1 ""
 Comment2 ""
@@ -376,7 +376,7 @@ m6
 Text GLabel 6000 3700 2    50   Input ~ 0
 ppm
 Text GLabel 6000 4800 2    50   Output ~ 0
-camera
+ocd
 Text GLabel 6000 3000 2    50   Output ~ 0
 led
 Text GLabel 4700 4100 0    50   Input ~ 0
@@ -396,7 +396,7 @@ spi3_mosi
 Text GLabel 4700 4700 0    50   Output ~ 0
 flash_cs
 Text GLabel 6000 5100 2    50   Output ~ 0
-spi2_cs
+ocd_cs
 NoConn ~ 6000 4600
 NoConn ~ 4700 5300
 NoConn ~ 4700 4000
@@ -1060,18 +1060,8 @@ Text GLabel 6100 6350 0    50   Input ~ 0
 m6
 Text GLabel 6100 6650 0    50   Output ~ 0
 rssi_adc
-Text GLabel 6100 6550 0    50   Input ~ 0
-camera
 Text GLabel 6100 6450 0    50   Output ~ 0
 ppm
-Text GLabel 7650 6350 0    50   Input ~ 0
-spi2_sck
-Text GLabel 7650 6250 0    50   Output ~ 0
-spi2_miso
-Text GLabel 7650 6150 0    50   Input ~ 0
-spi2_mosi
-Text GLabel 7650 6450 0    50   Input ~ 0
-spi2_cs
 $Comp
 L power:+5V #PWR0113
 U 1 1 5FEB7286
@@ -1986,17 +1976,6 @@ F 3 "~" H 6300 6450 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Connector:TestPoint TP6
-U 1 1 5FC1A689
-P 6100 6550
-F 0 "TP6" V 6100 7150 50  0000 L CNN
-F 1 "Camera" V 6100 6750 50  0000 L CNN
-F 2 "TestPoint:TestPoint_Pad_1.5x1.5mm" H 6300 6550 50  0001 C CNN
-F 3 "~" H 6300 6550 50  0001 C CNN
-	1    6100 6550
-	0    1    1    0   
-$EndComp
-$Comp
 L Connector:TestPoint TP7
 U 1 1 5FC1CA02
 P 6100 6650
@@ -2073,10 +2052,6 @@ F 3 "~" H 6300 7300 50  0001 C CNN
 	1    6100 7300
 	0    1    1    0   
 $EndComp
-NoConn ~ 7650 6150
-NoConn ~ 7650 6250
-NoConn ~ 7650 6350
-NoConn ~ 7650 6450
 Text GLabel 3550 950  1    50   Input ~ 0
 boot0
 $Comp
@@ -2103,4 +2078,10 @@ F 3 "" H 3550 1250 60  0000 C CNN
 $EndComp
 Text Notes 6400 2650 0    50   ~ 0
 PA4 => DAC Camera control
+$Sheet
+S 6700 5350 650  550 
+U 5FF7D209
+F0 "Video" 50
+F1 "video.sch" 50
+$EndSheet
 $EndSCHEMATC
